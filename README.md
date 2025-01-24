@@ -4,7 +4,7 @@
 ### Pre-Reqs
 - WSL with Ubuntu set up on managed device
 - Digital Ocean Account with payment set up
-- Digital Ocean access token
+- Digital Ocean access token, save as $DO_PAT in WSL
 - SSH key-pair generated on the WSL
 - Public key added to Digital Ocean account
 
