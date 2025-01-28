@@ -1,0 +1,16 @@
+---
+# Install useful and required utilities
+- hosts: "servers"
+  become: yes
+  gather_facts: yes
+  max_fail_percentage: 0
+  tasks:
+    - name: Install generally useful utilities
+      dnf:
+        name:
+          - bc
+          - lsof
+          - nmon
+          - strace
+          - tree
+        state: present

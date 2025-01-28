@@ -9,7 +9,7 @@
 - Public key added to Digital Ocean account
 
 ### Setup WSL 
-1. Install terraform to WSL as per [here](https://www.digitalocean.com/community/tutorials/how-to-use-terraform-with-digitalocean)
+1. Install terraform to WSL as per [here](https://www.digitalocean.com/community/tutorials/how-to-use-terraform-with-digitalocean) and set the DO_PAT env varible to your Digtal Ocean access token
 2. Install ansible to WSL as  per [here](https://docs.ansible.com/ansible/latest/installation_guide/installation_distros.html#installing-ansible-on-ubuntu), in short: 
 ```
 $ sudo apt update
@@ -17,16 +17,30 @@ $ sudo apt install software-properties-common
 $ sudo add-apt-repository --yes --update ppa:ansible/ansible
 $ sudo apt install ansible
 ```
-3. Install ansible terraform provider as per [here](https://github.com/ansible/terraform-provider-ansible?tab=readme-ov-file)
-4. Install the RealVNC viewer. Download the .deb package from [here](https://www.realvnc.com/de/connect/download/viewer/linux/), Install the .deb package with ```sudo dpkg -i <package> ```
+3. Create an .ansible.cfg file in your wsl home
+```
+[defaults]
+inventory = inventory
+log_path = ./logs/ansible.log
+retry_files_enabled = False
+gathering = explicit
+any_errors_fatal = True
+stdout_callback = debug
+remote_user = ansible
+private_key_file = /home/<user>/.ssh/id_rsa
+```
+4. Install ansible terraform provider as per [here](https://github.com/ansible/terraform-provider-ansible?tab=readme-ov-file)
+5. Install the RealVNC viewer. Download the .deb package from [here](https://www.realvnc.com/de/connect/download/viewer/linux/), Install the .deb package with ```sudo dpkg -i <package> ```
 
 ### Setup Case Study Environment
 
 1. Log into WSL
 2. run: ```terraform plan   -var "do_token=${DO_PAT}"   -var "pvt_key=$HOME/.ssh/id_rsa"  ```
-3. run: ```terraform apply   -var "do_token=${DO_PAT}"   -var "pvt_key=$HOME/.ssh/id_rsa```
+3. run: ```terraform apply   -var "do_token=${DO_PAT}"   -var "pvt_key=$HOME/.ssh/id_rsa``` this will create all machines and add the required entries to the ansible inventory file
 
-... run ansible
+todo: copy ssh key to client
+
+... run ansible playbooks as needed
 
 
 #### Steps to do manually
@@ -54,7 +68,7 @@ Synchronizing state of sddm.service with SysV service script with /lib/systemd/s
 Executing: /lib/systemd/systemd-sysv-install enable sddm
 ```
 - Start the vncviewer in WSL by using the command ```vncviewer```
-- Log into the client and complete the setup of the desktop environment
+- Log into the client ```client-ip:5900 ``` and complete the setup of the desktop environment
 - provide candidate with the connection details
 
 ### Destroy Case Study Environment
