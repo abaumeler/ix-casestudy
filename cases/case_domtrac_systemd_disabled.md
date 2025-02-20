@@ -1,7 +1,7 @@
 # Domtrac SystemD Disabled
 
 ## Overview
-This case deplyes a systemd unit file called domtrac.service
+This case deployes a systemd unit file called domtrac.service
 
 The unit file is disabled - the service will not be running when the machine is restarted
 
@@ -28,5 +28,6 @@ There are multiple paths that can be taken here. One straight forward answer to 
 - Ability to read documentation and apply information to current issue
 - Is the application simply started (short term fix until next reboot) or acutally enabled (permanent fix)?
 - Is the proposed solution verfied by rebooting the machines?
+- Logfiles found and read? If yes - how were they read?
 
 
