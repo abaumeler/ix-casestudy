@@ -80,7 +80,7 @@ resource "digitalocean_droplet" "server-2" {
 
 # Create the dynamic Ansible inventory file
 resource "local_file" "ansible_inventory" {
-  filename = "../ansible/inventory" # The path where inventory.yml will be saved
+  filename = "../ansible/inventory.yml" # The path where inventory.yml will be saved
 
   content = <<-EOT
 [servers]
