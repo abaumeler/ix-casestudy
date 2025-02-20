@@ -1,0 +1,11 @@
+[Unit]
+Description=Domtrac
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/domtrac.sh
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target

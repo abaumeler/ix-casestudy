@@ -1,0 +1,33 @@
+---
+- name: Deploy systemd service for training
+  hosts: "servers"
+  become: yes
+  tasks:
+    - name: Copy domtrac-service script
+      copy:
+        src: files/domtrac.sh
+        dest: /usr/local/bin/domtrac.sh
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Copy systemd unit file
+      copy:
+        src: files/domtrac.service
+        dest: /etc/systemd/system/domtrac.service
+        owner: root
+        group: root
+        mode: '0644'
+      notify:
+        - Reload systemd
+
+    - name: Ensure service is disabled and stopped
+      systemd:
+        name: domtrac
+        enabled: no
+        state: stopped
+
+  handlers:
+    - name: Reload systemd
+      systemd:
+        daemon_reload: yes
