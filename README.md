@@ -28,6 +28,7 @@ any_errors_fatal = True
 stdout_callback = debug
 remote_user = ansible
 private_key_file = /home/<user>/.ssh/id_rsa
+host_key_checking = False     
 ```
 4. Install ansible terraform provider as per [here](https://github.com/ansible/terraform-provider-ansible?tab=readme-ov-file)
 5. Install the RealVNC viewer. Download the .deb package from [here](https://www.realvnc.com/de/connect/download/viewer/linux/), Install the .deb package with ```sudo dpkg -i <package> ```
