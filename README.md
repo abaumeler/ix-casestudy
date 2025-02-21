@@ -36,16 +36,16 @@ host_key_checking = False
 ### Setup Case Study Environment
 
 1. Log into WSL
-2. run: ```terraform plan   -var "do_token=${DO_PAT}"   -var "pvt_key=$HOME/.ssh/id_rsa"  ```
-3. run: ```terraform apply   -var "do_token=${DO_PAT}"   -var "pvt_key=$HOME/.ssh/id_rsa``` this will create all machines and add the required entries to the ansible inventory file
+2. run: ```terraform plan   -var "do_token=${DO_PAT}"   -var "pvt_key=$HOME/.ssh/id_rsa"  -var "pub_key=$HOME/.ssh/id_rsa.pub ```
+3. run: ```terraform apply   -var "do_token=${DO_PAT}"   -var "pvt_key=$HOME/.ssh/id_rsa -var "pub_key=$HOME/.ssh/id_rsa.pub ``` this will create all machines and add the required entries to the ansible inventory file
 
-todo: copy ssh key to client
 
-... run ansible playbooks as needed
+... run ansible playbooks as needed to deploy the desired study cases
 
 
 #### Steps to do manually
-
+- Copy content of the used private key to ansible/ssh-keys/id_rsa
+-  run ```ansible-playbook client-setup.yml -i inventory.yml```
 - log into the client machine as root to start the autoconfiguration and note the credentials for the VNC connection: 
 ```
 Ubuntu-desktop is now installed and configured. Enjoy it!
@@ -68,11 +68,12 @@ Created symlink /etc/systemd/system/graphical.target.wants/x11vnc.service → /l
 Synchronizing state of sddm.service with SysV service script with /lib/systemd/systemd-sysv-install.
 Executing: /lib/systemd/systemd-sysv-install enable sddm
 ```
-- Start the vncviewer in WSL by using the command ```vncviewer```
+- Start the vncviewer in WSL by using the command ```vncviewer```. Alernatively any other VNC client can be used by the candidate
 - Log into the client ```client-ip:5900 ``` and complete the setup of the desktop environment
-- provide candidate with the connection details
+- Run ansible playbooks to deploy the desired study cases
+- provide candidate with the connection & case details 
 
 ### Destroy Case Study Environment
 To remove the case study environment and prevent unwanted costs run the following steps:
 1. Log into WSL
-2. run: ```terraform apply  -destroy  -var "do_token=${DO_PAT}"   -var "pvt_key=$HOME/.ssh/id_rsa"```
+2. run: ```terraform apply  -destroy  -var "do_token=${DO_PAT}"   -var "pvt_key=$HOME/.ssh/id_rsa" -var "pub_key=$HOME/.ssh/id_rsa.pub```
