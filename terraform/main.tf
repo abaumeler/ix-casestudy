@@ -1,80 +1,72 @@
 resource "digitalocean_droplet" "client-1" {
-    image = "ubuntudesktopgno"
-    name = "client-1"
-    region = "fra1"
-    size = "s-1vcpu-2gb"
-    ssh_keys = [
-        data.digitalocean_ssh_key.terraform-key.id
-    ]
-    connection {
-        host = self.ipv4_address
-        user = "root"
-        type = "ssh"
-        private_key = file(var.pvt_key)
-        timeout = "2m"
-    }
+  image  = "ubuntudesktopgno"
+  name   = "client-1"
+  region = "fra1"
+  size   = "s-1vcpu-2gb"
+  user_data = templatefile("${path.module}/cloud-init.yml", {
+    pub_ssh_key = file(var.pub_key)
+  })
+  ssh_keys = [
+    data.digitalocean_ssh_key.terraform-key.id
+  ]
 }
 
 resource "digitalocean_droplet" "server-1" {
-    image = "almalinux-8-x64"
-    name = "server-1"
-    region = "fra1"
-    size = "s-1vcpu-1gb"
-    ssh_keys = [
-        data.digitalocean_ssh_key.terraform-key.id
-    ]
-    connection {
-        host = self.ipv4_address
-        user = "root"
-        type = "ssh"
-        private_key = file(var.pvt_key)
-        timeout = "5m"
-    }
-    provisioner "remote-exec" {
-        inline = [
-      "sudo useradd -m -s /bin/bash ansible",
-      "sudo mkdir -p /home/ansible/.ssh",
-      "sudo chmod 700 /home/ansible/.ssh",
-      "sudo cp /root/.ssh/authorized_keys /home/ansible/.ssh/",
-      "sudo chown -R ansible:ansible /home/ansible/.ssh",
-      "echo 'ansible ALL=(ALL) NOPASSWD:ALL' | sudo tee -a /etc/sudoers",
+  image  = "almalinux-8-x64"
+  name   = "server-1"
+  region = "fra1"
+  size   = "s-1vcpu-1gb"
+  user_data = templatefile("${path.module}/cloud-init.yml", {
+    pub_ssh_key    = file(var.pub_key)
+  })
+
+  ssh_keys = [
+    data.digitalocean_ssh_key.terraform-key.id
+  ]
+
+  connection {
+    host        = self.ipv4_address
+    user        = "root"
+    type        = "ssh"
+    private_key = file(var.pvt_key)
+    timeout     = "5m"
+  }
+  provisioner "remote-exec" {
+    inline = [
       "rpm --import https://repo.almalinux.org/almalinux/RPM-GPG-KEY-AlmaLinux",
       "sudo dnf -y update",
-      "sudo dnf -y upgrade",
       "sudo dnf -y install python39"
-        ]
-    }
+    ]
+  }
 }
 
 resource "digitalocean_droplet" "server-2" {
-    image = "almalinux-8-x64"
-    name = "server-2"
-    region = "fra1"
-    size = "s-1vcpu-1gb"
-    ssh_keys = [
-        data.digitalocean_ssh_key.terraform-key.id
-    ]
-    connection {
-        host = self.ipv4_address
-        user = "root"
-        type = "ssh"
-        private_key = file(var.pvt_key)
-        timeout = "5m"
-    }
-    provisioner "remote-exec" {
-        inline = [
-      "sudo useradd -m -s /bin/bash ansible",
-      "sudo mkdir -p /home/ansible/.ssh",
-      "sudo chmod 700 /home/ansible/.ssh",
-      "sudo cp /root/.ssh/authorized_keys /home/ansible/.ssh/",
-      "sudo chown -R ansible:ansible /home/ansible/.ssh",
-      "echo 'ansible ALL=(ALL) NOPASSWD:ALL' | sudo tee -a /etc/sudoers",
+  image  = "almalinux-8-x64"
+  name   = "server-2"
+  region = "fra1"
+  size   = "s-1vcpu-1gb"
+  user_data = templatefile("${path.module}/cloud-init.yml", {
+    pub_ssh_key    = file(var.pub_key)
+  })
+
+  ssh_keys = [
+    data.digitalocean_ssh_key.terraform-key.id
+  ]
+
+  connection {
+    host        = self.ipv4_address
+    user        = "root"
+    type        = "ssh"
+    private_key = file(var.pvt_key)
+    timeout     = "5m"
+  }
+  provisioner "remote-exec" {
+    inline = [
       "rpm --import https://repo.almalinux.org/almalinux/RPM-GPG-KEY-AlmaLinux",
       "sudo dnf -y update",
-      "sudo dnf -y upgrade",
       "sudo dnf -y install python39"
-        ]
-    }
+    ]
+  }
 }
 
 
@@ -86,6 +78,9 @@ resource "local_file" "ansible_inventory" {
 [servers]
 ${digitalocean_droplet.server-1.ipv4_address}
 ${digitalocean_droplet.server-2.ipv4_address}
+
+[clients]
+${digitalocean_droplet.client-1.ipv4_address}
   EOT
 }
 

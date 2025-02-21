@@ -1,5 +1,5 @@
 ---
-- name: Deploy systemd service for training
+- name: Deploy domtrac service for training
   hosts: "servers"
   become: yes
   tasks:

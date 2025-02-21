@@ -1,0 +1,13 @@
+---
+- name: Deploy systemd service for training
+  hosts: "clients"
+  become: yes
+  tasks:
+    - name: Copy domtrac-service script
+      copy:
+        src: files/domtrac.sh
+        dest: /home/ansible/domtrac.sh
+        owner: ansible 
+        group: ansible
+        mode: '0755'
+
