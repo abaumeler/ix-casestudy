@@ -68,7 +68,7 @@ Created symlink /etc/systemd/system/graphical.target.wants/x11vnc.service → /l
 Synchronizing state of sddm.service with SysV service script with /lib/systemd/systemd-sysv-install.
 Executing: /lib/systemd/systemd-sysv-install enable sddm
 ```
-- Start the vncviewer in WSL by using the command ```vncviewer```. Alernatively any other VNC client can be used by the candidate
+- Start the vncviewer in WSL by using the command ```vncviewer```. Alternatively any other VNC client can be used by the candidate
 - Log into the client ```client-ip:5900 ``` and complete the setup of the desktop environment
 - Run ansible playbooks to deploy the desired study cases
 - provide candidate with the connection & case details 
