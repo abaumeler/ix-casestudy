@@ -76,4 +76,4 @@ Executing: /lib/systemd/systemd-sysv-install enable sddm
 ### Destroy Case Study Environment
 To remove the case study environment and prevent unwanted costs run the following steps:
 1. Log into WSL
-2. run: ```terraform apply  -destroy  -var "do_token=${DO_PAT}"   -var "pvt_key=$HOME/.ssh/id_rsa" -var "pub_key=$HOME/.ssh/id_rsa.pub```
+2. run: ```terraform apply  -destroy  -var "do_token=${DO_PAT}"   -var "pvt_key=$HOME/.ssh/id_rsa" -var "pub_key=$HOME/.ssh/id_rsa.pub"```
