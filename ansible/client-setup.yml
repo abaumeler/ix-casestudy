@@ -3,10 +3,24 @@
   hosts: "clients"
   become: yes
   tasks:
-    - name: Copy private-key
+    - name: Copy private-key for root
       copy:
         src: ssh-keys/id_rsa
         dest: /root/.ssh/id_rsa
         owner: root 
         group: root
+        mode: '0600'
+    - name: Copy private-key for user
+      copy:
+        src: ssh-keys/id_rsa
+        dest: /home/user/.ssh/id_rsa
+        owner: user 
+        group: user
+        mode: '0600'
+    - name: Copy inventory for user
+      copy:
+        src: inventory.yml
+        dest: /home/user/Desktop/inventory.yml
+        owner: user 
+        group: user
         mode: '0600'
