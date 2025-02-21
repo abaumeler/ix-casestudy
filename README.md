@@ -36,8 +36,8 @@ host_key_checking = False
 ### Setup Case Study Environment
 
 1. Log into WSL
-2. run: ```terraform plan   -var "do_token=${DO_PAT}"   -var "pvt_key=$HOME/.ssh/id_rsa"  -var "pub_key=$HOME/.ssh/id_rsa.pub ```
-3. run: ```terraform apply   -var "do_token=${DO_PAT}"   -var "pvt_key=$HOME/.ssh/id_rsa -var "pub_key=$HOME/.ssh/id_rsa.pub ``` this will create all machines and add the required entries to the ansible inventory file
+2. run: ```terraform plan   -var "do_token=${DO_PAT}"   -var "pvt_key=$HOME/.ssh/id_rsa"  -var "pub_key=$HOME/.ssh/id_rsa.pub" ```
+3. run: ```terraform apply   -var "do_token=${DO_PAT}"   -var "pvt_key=$HOME/.ssh/id_rsa -var "pub_key=$HOME/.ssh/id_rsa.pub" ``` this will create all machines and add the required entries to the ansible inventory file
 
 
 ... run ansible playbooks as needed to deploy the desired study cases
