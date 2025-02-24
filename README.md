@@ -5,7 +5,7 @@
 - WSL with Ubuntu set up on managed device
 - Digital Ocean Account with payment set up
 - Digital Ocean access token, save as $DO_PAT env variable in WSL
-- SSH key-pair generated on the WSL for use exclusively in this project (private key will be distributet)
+- SSH key-pair generated on the WSL in $HOME/.ssh/id_rsa.pub resp. $HOME/.ssh/id_rsa for use exclusively in this project (private key will be distributed)
 - Public key added to Digital Ocean account
 
 ### Setup WSL 
