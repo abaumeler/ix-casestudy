@@ -17,8 +17,8 @@ $ sudo apt install software-properties-common
 $ sudo add-apt-repository --yes --update ppa:ansible/ansible
 $ sudo apt install ansible
 ```
-3. Create an .ansible.cfg file in your wsl home
-```
+3. Create an .ansible.cfg file in your wsl home directory with the following content:
+```ini
 [defaults]
 inventory = inventory
 log_path = ./logs/ansible.log
