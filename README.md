@@ -56,7 +56,7 @@ The Terraform script will:
 1. Generate a new SSH key pair
 2. Save the keys to ansible/ssh-keys/
 3. Create the required infrastructure
-4. Configure the client automatically using Ansible
+4. Add all machines to the ansible inventory file
 
 ### 3. Manual Configuration Steps
 
