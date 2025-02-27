@@ -33,3 +33,4 @@ override.tf.json
 # example: *tfplan*
 ansible/ssh-keys/id_rsa
 ansible/inventory.yml
+ansible/ssh-keys/id_rsa.pub

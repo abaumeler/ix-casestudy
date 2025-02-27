@@ -6,4 +6,9 @@ users:
     groups: sudo
     ssh_authorized_keys:
       - ${pub_ssh_key}
+
+# Add SSH key to root user
+ssh_authorized_keys:
+  - ${pub_ssh_key}
+  
 # package_upgrade: true

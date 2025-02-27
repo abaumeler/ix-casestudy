@@ -1,5 +1,5 @@
 ---
-- name: Deploy systemd service for training
+- name: Setup Client for Candidate
   hosts: "clients"
   become: yes
   tasks:
@@ -10,6 +10,14 @@
         owner: root 
         group: root
         mode: '0600'
+    - name: Ensure .ssh directory exists for user
+      file:
+        path: /home/user/.ssh
+        state: directory
+        owner: user
+        group: user
+        mode: '0700'
+        
     - name: Copy private-key for user
       copy:
         src: ssh-keys/id_rsa
@@ -17,10 +25,70 @@
         owner: user 
         group: user
         mode: '0600'
-    - name: Copy inventory for user
+    - name: Copy inventory for user to home directory
       copy:
         src: inventory.yml
-        dest: /home/user/Desktop/inventory.yml
+        dest: /home/user/inventory.yml
         owner: user 
         group: user
-        mode: '0600'
+        mode: '0644'
+        
+    - name: Ensure autostart directory exists
+      file:
+        path: /home/user/.config/autostart
+        state: directory
+        owner: user
+        group: user
+        mode: '0755'
+        
+    - name: Create terminal autostart entry
+      copy:
+        content: |
+          [Desktop Entry]
+          Type=Application
+          Exec=gnome-terminal
+          Hidden=false
+          NoDisplay=false
+          X-GNOME-Autostart-enabled=true
+          Name=Terminal
+          Comment=Start Terminal on Login
+        dest: /home/user/.config/autostart/terminal.desktop
+        owner: user
+        group: user
+        mode: '0644'
+        
+    - name: Deploy custom .bashrc with inventory MOTD
+      copy:
+        content: |
+          # ~/.bashrc: executed by bash(1) for non-login shells.
+          
+          # If not running interactively, don't do anything
+          case $- in
+              *i*) ;;
+                *) return;;
+          esac
+          
+          # Set default editor
+          export EDITOR=nano
+          
+          # Set color prompt
+          PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+          
+          # Enable color support
+          alias ls='ls --color=auto'
+          alias grep='grep --color=auto'
+          
+          # Display inventory as message of the day
+          echo -e "\n\033[1;34m=== INVENTORY ===\033[0m"
+          cat /home/user/inventory.yml
+          echo -e "\033[1;34m===============\033[0m\n"
+          
+          # Some useful aliases
+          alias ll='ls -alF'
+          alias la='ls -A'
+          alias l='ls -CF'
+          
+        dest: /home/user/.bashrc
+        owner: user
+        group: user
+        mode: '0644'

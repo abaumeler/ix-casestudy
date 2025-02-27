@@ -4,10 +4,10 @@ resource "digitalocean_droplet" "client-1" {
   region = "fra1"
   size   = "s-1vcpu-2gb"
   user_data = templatefile("${path.module}/cloud-init.yml", {
-    pub_ssh_key = file(var.pub_key)
+    pub_ssh_key = tls_private_key.ssh_key.public_key_openssh
   })
   ssh_keys = [
-    data.digitalocean_ssh_key.terraform-key.id
+    digitalocean_ssh_key.terraform_key.id
   ]
 }
 
@@ -17,18 +17,18 @@ resource "digitalocean_droplet" "server-1" {
   region = "fra1"
   size   = "s-1vcpu-1gb"
   user_data = templatefile("${path.module}/cloud-init.yml", {
-    pub_ssh_key    = file(var.pub_key)
+    pub_ssh_key = tls_private_key.ssh_key.public_key_openssh
   })
 
   ssh_keys = [
-    data.digitalocean_ssh_key.terraform-key.id
+    digitalocean_ssh_key.terraform_key.id
   ]
 
   connection {
     host        = self.ipv4_address
     user        = "root"
     type        = "ssh"
-    private_key = file(var.pvt_key)
+    private_key = tls_private_key.ssh_key.private_key_pem
     timeout     = "5m"
   }
   provisioner "remote-exec" {
@@ -46,18 +46,18 @@ resource "digitalocean_droplet" "server-2" {
   region = "fra1"
   size   = "s-1vcpu-1gb"
   user_data = templatefile("${path.module}/cloud-init.yml", {
-    pub_ssh_key    = file(var.pub_key)
+    pub_ssh_key = tls_private_key.ssh_key.public_key_openssh
   })
 
   ssh_keys = [
-    data.digitalocean_ssh_key.terraform-key.id
+    digitalocean_ssh_key.terraform_key.id
   ]
 
   connection {
     host        = self.ipv4_address
     user        = "root"
     type        = "ssh"
-    private_key = file(var.pvt_key)
+    private_key = tls_private_key.ssh_key.private_key_pem
     timeout     = "5m"
   }
   provisioner "remote-exec" {
