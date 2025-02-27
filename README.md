@@ -7,6 +7,8 @@
 
 ## Setup Instructions
 
+**IMPORTANT**: All commands in this guide should be run from the main directory (`ix-casestudy`).
+
 ### 1. WSL Configuration
 
 #### Install Terraform
