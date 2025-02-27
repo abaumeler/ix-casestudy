@@ -37,7 +37,6 @@ host_key_checking = False
 ```
 
 #### Install Additional Components
-- [Ansible Terraform provider](https://github.com/ansible/terraform-provider-ansible)
 - RealVNC viewer: Download .deb from [RealVNC website](https://www.realvnc.com/de/connect/download/viewer/linux/) and install with `sudo dpkg -i <package>`
 
 ### 2. Deploy Environment
