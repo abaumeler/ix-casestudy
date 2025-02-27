@@ -1,23 +1,29 @@
 # Inventx Case Study Environment
 
-## Setup
-### Pre-Reqs
-- WSL with Ubuntu set up on managed device
-- Digital Ocean Account with payment set up
-- Digital Ocean access token, save as $DO_PAT env variable in WSL
-- SSH key-pair generated on the WSL in ```$HOME/.ssh/id_rsa.pub``` resp. ```$HOME/.ssh/id_rsa``` for use exclusively in this project (private key will be distributed)
+## Prerequisites
+- WSL with Ubuntu on managed device
+- Digital Ocean account with payment configured
+- Digital Ocean access token saved as `$DO_PAT` environment variable in WSL
+- SSH key-pair generated in WSL at `$HOME/.ssh/id_rsa.pub` and `$HOME/.ssh/id_rsa` (exclusively for this project)
 - Public key added to Digital Ocean account
 
-### Setup WSL 
-1. Install terraform to WSL as per [here](https://www.digitalocean.com/community/tutorials/how-to-use-terraform-with-digitalocean) and set the DO_PAT env varible to your Digtal Ocean access token
-2. Install ansible to WSL as  per [here](https://docs.ansible.com/ansible/latest/installation_guide/installation_distros.html#installing-ansible-on-ubuntu), in short: 
+## Setup Instructions
+
+### 1. WSL Configuration
+
+#### Install Terraform
+Follow [Digital Ocean's guide](https://www.digitalocean.com/community/tutorials/how-to-use-terraform-with-digitalocean) and set `DO_PAT` environment variable.
+
+#### Install Ansible
+```bash
+sudo apt update
+sudo apt install software-properties-common
+sudo add-apt-repository --yes --update ppa:ansible/ansible
+sudo apt install ansible
 ```
-$ sudo apt update
-$ sudo apt install software-properties-common
-$ sudo add-apt-repository --yes --update ppa:ansible/ansible
-$ sudo apt install ansible
-```
-3. Create an .ansible.cfg file in your wsl home directory with the following content:
+
+#### Configure Ansible
+Create `.ansible.cfg` in your WSL home directory:
 ```ini
 [defaults]
 inventory = inventory
@@ -30,50 +36,43 @@ remote_user = ansible
 private_key_file = /home/<user>/.ssh/id_rsa
 host_key_checking = False     
 ```
-4. Install ansible terraform provider as per [here](https://github.com/ansible/terraform-provider-ansible?tab=readme-ov-file)
-5. Install the RealVNC viewer. Download the .deb package from [here](https://www.realvnc.com/de/connect/download/viewer/linux/), Install the .deb package with ```sudo dpkg -i <package> ```
 
-### Setup Case Study Environment
+#### Install Additional Components
+- [Ansible Terraform provider](https://github.com/ansible/terraform-provider-ansible)
+- RealVNC viewer: Download .deb from [RealVNC website](https://www.realvnc.com/de/connect/download/viewer/linux/) and install with `sudo dpkg -i <package>`
 
-1. Log into WSL
-2. run: ```terraform plan   -var "do_token=${DO_PAT}"   -var "pvt_key=$HOME/.ssh/id_rsa"  -var "pub_key=$HOME/.ssh/id_rsa.pub" ```
-3. run: ```terraform apply   -var "do_token=${DO_PAT}"   -var "pvt_key=$HOME/.ssh/id_rsa -var "pub_key=$HOME/.ssh/id_rsa.pub" ``` this will create all machines and add the required entries to the ansible inventory file
+### 2. Deploy Environment
 
+```bash
+# Copy SSH private key
+cp $HOME/.ssh/id_rsa ansible/ssh-keys/id_rsa
 
-... run ansible playbooks as needed to deploy the desired study cases
+# Plan infrastructure
+terraform plan -var "do_token=${DO_PAT}" -var "pvt_key=$HOME/.ssh/id_rsa" -var "pub_key=$HOME/.ssh/id_rsa.pub"
 
+# Create infrastructure
+terraform apply -var "do_token=${DO_PAT}" -var "pvt_key=$HOME/.ssh/id_rsa" -var "pub_key=$HOME/.ssh/id_rsa.pub"
 
-#### Steps to do manually
-- Copy content of the used private key to ansible/ssh-keys/id_rsa
--  run ```ansible-playbook client-setup.yml -i inventory.yml```
-- log into the client machine as root to start the autoconfiguration and note the credentials for the VNC connection: 
+# Configure client
+ansible-playbook client-setup.yml -i inventory.yml
 ```
-Ubuntu-desktop is now installed and configured. Enjoy it!
 
-----------------------------------------------------------------------------
-Your VNC password is "/70smkix". To update it you can run:
-x11vnc -storepasswd %NEW_PASSWORD% /home/user/.vnc/passwd
-Using XServer from root account is not recommended, so user "user" is created with password "uGLqcNnD"
-To change user's password execute 'passwd user'
-Raw generated authentication data is stored in '/root/.digitalocean_passwords'
-----------------------------------------------------------------------------
-Ubuntu-Desktop is starting, please wait about 2-3 minutes until console is unblocked
-Adding user `user' ...
-Adding new group `user' (1000) ...
-Adding new user `user' (1000) with group `user' ...
-Creating home directory `/home/user' ...
-Copying files from `/etc/skel' ...
-stored passwd in file: /home/user/.vnc/passwd
-Created symlink /etc/systemd/system/graphical.target.wants/x11vnc.service → /lib/systemd/system/x11vnc.service.
-Synchronizing state of sddm.service with SysV service script with /lib/systemd/systemd-sysv-install.
-Executing: /lib/systemd/systemd-sysv-install enable sddm
+### 3. Manual Configuration Steps
+
+1. SSH to client machine as root to start autoconfiguration
+2. Note the VNC credentials displayed during setup
+3. Launch VNC viewer: `vncviewer` or use any VNC client
+4. Connect to `client-ip:5900` and complete desktop environment setup
+5. Run ansible playbooks to deploy specific study cases
+6. Provide candidate with connection & case details
+
+### 4. Deployment of Study Cases
+
+Run ansible playbooks as needed to deploy the desired study cases.
+
+### 5. Destroy Environment
+
+When finished, remove the environment to prevent unwanted costs:
+```bash
+terraform destroy -var "do_token=${DO_PAT}" -var "pvt_key=$HOME/.ssh/id_rsa" -var "pub_key=$HOME/.ssh/id_rsa.pub"
 ```
-- Start the vncviewer in WSL by using the command ```vncviewer```. Alternatively any other VNC client can be used by the candidate
-- Log into the client ```client-ip:5900 ``` and complete the setup of the desktop environment
-- Run ansible playbooks to deploy the desired study cases
-- provide candidate with the connection & case details 
-
-### Destroy Case Study Environment
-To remove the case study environment and prevent unwanted costs run the following steps:
-1. Log into WSL
-2. run: ```terraform apply  -destroy  -var "do_token=${DO_PAT}"   -var "pvt_key=$HOME/.ssh/id_rsa" -var "pub_key=$HOME/.ssh/id_rsa.pub"```
