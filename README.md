@@ -4,8 +4,8 @@
 ### Pre-Reqs
 - WSL with Ubuntu set up on managed device
 - Digital Ocean Account with payment set up
-- Digital Ocean access token, save as $DO_PAT in WSL
-- SSH key-pair generated on the WSL
+- Digital Ocean access token, save as $DO_PAT env variable in WSL
+- SSH key-pair generated on the WSL in ```$HOME/.ssh/id_rsa.pub``` resp. ```$HOME/.ssh/id_rsa``` for use exclusively in this project (private key will be distributed)
 - Public key added to Digital Ocean account
 
 ### Setup WSL 
@@ -17,8 +17,8 @@ $ sudo apt install software-properties-common
 $ sudo add-apt-repository --yes --update ppa:ansible/ansible
 $ sudo apt install ansible
 ```
-3. Create an .ansible.cfg file in your wsl home
-```
+3. Create an .ansible.cfg file in your wsl home directory with the following content:
+```ini
 [defaults]
 inventory = inventory
 log_path = ./logs/ansible.log
@@ -36,8 +36,8 @@ host_key_checking = False
 ### Setup Case Study Environment
 
 1. Log into WSL
-2. run: ```terraform plan   -var "do_token=${DO_PAT}"   -var "pvt_key=$HOME/.ssh/id_rsa"  -var "pub_key=$HOME/.ssh/id_rsa.pub ```
-3. run: ```terraform apply   -var "do_token=${DO_PAT}"   -var "pvt_key=$HOME/.ssh/id_rsa -var "pub_key=$HOME/.ssh/id_rsa.pub ``` this will create all machines and add the required entries to the ansible inventory file
+2. run: ```terraform plan   -var "do_token=${DO_PAT}"   -var "pvt_key=$HOME/.ssh/id_rsa"  -var "pub_key=$HOME/.ssh/id_rsa.pub" ```
+3. run: ```terraform apply   -var "do_token=${DO_PAT}"   -var "pvt_key=$HOME/.ssh/id_rsa -var "pub_key=$HOME/.ssh/id_rsa.pub" ``` this will create all machines and add the required entries to the ansible inventory file
 
 
 ... run ansible playbooks as needed to deploy the desired study cases
@@ -76,4 +76,4 @@ Executing: /lib/systemd/systemd-sysv-install enable sddm
 ### Destroy Case Study Environment
 To remove the case study environment and prevent unwanted costs run the following steps:
 1. Log into WSL
-2. run: ```terraform apply  -destroy  -var "do_token=${DO_PAT}"   -var "pvt_key=$HOME/.ssh/id_rsa" -var "pub_key=$HOME/.ssh/id_rsa.pub```
+2. run: ```terraform apply  -destroy  -var "do_token=${DO_PAT}"   -var "pvt_key=$HOME/.ssh/id_rsa" -var "pub_key=$HOME/.ssh/id_rsa.pub"```
