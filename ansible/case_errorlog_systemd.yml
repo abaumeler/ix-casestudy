@@ -1,0 +1,33 @@
+---
+- name: Deploy errorlog service for training
+  hosts: "servers"
+  become: yes
+  tasks:
+    - name: Copy errorlog script
+      copy:
+        src: files/errorlog.sh
+        dest: /usr/local/bin/errorlog.sh
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Copy systemd unit file
+      copy:
+        src: files/errorlog.service
+        dest: /etc/systemd/system/errorlog.service
+        owner: root
+        group: root
+        mode: '0644'
+      notify:
+        - Reload systemd
+
+    - name: Ensure service is enabled and started
+      systemd:
+        name: errorlog
+        enabled: yes
+        state: started
+
+  handlers:
+    - name: Reload systemd
+      systemd:
+        daemon_reload: yes
